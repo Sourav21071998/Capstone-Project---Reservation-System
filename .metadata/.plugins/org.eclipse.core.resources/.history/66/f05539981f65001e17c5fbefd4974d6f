@@ -1,0 +1,5 @@
+package com.training.customerservice.service;
+
+public class CustomerService {
+
+}

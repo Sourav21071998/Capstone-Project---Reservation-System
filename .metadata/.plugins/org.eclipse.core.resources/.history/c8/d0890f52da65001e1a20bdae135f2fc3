@@ -1,0 +1,29 @@
+package com.training.reservationservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.training.reservationservice.entity.ReservationEntity;
+import com.training.reservationservice.reservationRepository.ReservationRepository;
+
+@Service
+public class ReservationService {
+	
+	@Autowired
+	ReservationRepository reservationRepository;
+	
+	
+	public ReservationEntity createReservation(ReservationEntity reservationEntity)
+	{
+		ReservationEntity save = reservationRepository.save(reservationEntity);
+		return save;
+	}
+	
+	public void cancelResevation(Long id)
+	{
+		ReservationEntity entity = reservationRepository.findById(id).orElseThrow(()->new RuntimeException("Id not present in database"));
+		reservationRepository.delete(entity);
+	}
+	
+
+}

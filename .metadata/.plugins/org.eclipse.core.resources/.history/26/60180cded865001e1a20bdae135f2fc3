@@ -1,0 +1,5 @@
+package com.training.hotelmanagementservice.service;
+
+public class HotelService {
+
+}

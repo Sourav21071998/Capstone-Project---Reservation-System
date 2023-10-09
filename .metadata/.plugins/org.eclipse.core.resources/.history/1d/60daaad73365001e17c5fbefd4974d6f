@@ -1,0 +1,5 @@
+package com.training.paymentservice.entity;
+
+public class Payment {
+
+}

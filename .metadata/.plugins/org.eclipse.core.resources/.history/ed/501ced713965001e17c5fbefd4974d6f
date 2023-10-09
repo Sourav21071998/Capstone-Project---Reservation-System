@@ -1,0 +1,5 @@
+package com.training.hotelmanagementservice.entity;
+
+public class HotelEntity {
+
+}

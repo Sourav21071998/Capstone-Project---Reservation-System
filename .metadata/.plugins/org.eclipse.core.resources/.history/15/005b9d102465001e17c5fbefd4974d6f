@@ -1,0 +1,29 @@
+package com.training.customerservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.training.customerservice.entity.model.CustomerModel;
+import com.training.customerservice.service.CustomerService;
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+	
+	@Autowired
+	CustomerService customerService;
+	
+	@PostMapping("/register")
+	public ResponseEntity<CustomerModel> register(@RequestBody CustomerModel customerModel)
+	{
+		CustomerModel registerCustomer = customerService.registerCustomer(customerModel);
+		return new ResponseEntity<CustomerModel>(registerCustomer, HttpStatus.CREATED);
+	}
+	
+
+}

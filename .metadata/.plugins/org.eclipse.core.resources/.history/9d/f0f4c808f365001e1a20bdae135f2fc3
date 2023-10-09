@@ -1,0 +1,26 @@
+package com.training.hotelmanagementservice.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.training.hotelmanagementservice.entity.HotelEntity;
+import com.training.hotelmanagementservice.repository.HotelRepository;
+
+@Service
+public class HotelService {
+	
+	@Autowired
+	HotelRepository hotelRepository;
+	
+	public boolean checkAvailability(Long Id)
+	{
+		Optional<HotelEntity> hotel = hotelRepository.findById(Id);
+		if (hotel == null)
+			return false;
+		else
+			return true;
+	}
+
+}

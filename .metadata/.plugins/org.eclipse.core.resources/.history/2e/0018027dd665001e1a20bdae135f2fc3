@@ -1,0 +1,5 @@
+package com.training.reservationservice.configuration;
+
+public class ReservationConfiguration {
+
+}

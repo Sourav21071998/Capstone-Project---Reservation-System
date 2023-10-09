@@ -1,0 +1,18 @@
+package com.training.notificationservice.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Service
+@RequestMapping("/notification")
+public class NotificationService {
+	
+	@GetMapping("/welcome")
+	public String notificationMessage()
+	{
+		String message = "Hi, Welcome";
+		return message;
+	}
+
+}

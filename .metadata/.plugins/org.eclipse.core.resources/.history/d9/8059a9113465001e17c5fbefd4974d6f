@@ -1,0 +1,5 @@
+package com.training.paymentservice.repository;
+
+public interface PaymentRepository {
+
+}

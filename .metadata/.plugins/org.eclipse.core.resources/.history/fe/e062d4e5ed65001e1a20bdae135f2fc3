@@ -1,0 +1,46 @@
+package com.training.reservationservice.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.training.reservationservice.entity.ReservationEntity;
+import com.training.reservationservice.model.PaymentModel;
+import com.training.reservationservice.model.ReservationModel;
+import com.training.reservationservice.reservationRepository.ReservationRepository;
+
+@Service
+public class ReservationService {
+
+	@Autowired
+	ReservationRepository reservationRepository;
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	public Object createReservation(ReservationModel reservationModel) {
+		Long customerId = reservationModel.getCustomerId();
+		Boolean checkCustomer = restTemplate.getForObject("http://localhost/8081/customer/" + customerId,
+				Boolean.class);
+		if (checkCustomer == false)
+			throw new RuntimeException("CustomerId:" + customerId + " is not present in database.");
+		Long hotelId = reservationModel.getHotelId();
+		Boolean checkHotel = restTemplate.getForObject("http://localhost/8081/hotel/check/" + hotelId, Boolean.class);
+		if (checkHotel == false)
+			throw new RuntimeException("HotelId:"+hotelId+" is not present in database");
+		ReservationEntity reservationEntity = new ReservationEntity();
+		BeanUtils.copyProperties(reservationModel, reservationEntity);
+		ReservationEntity save = reservationRepository.save(reservationEntity);
+		PaymentModel paymentModel = new PaymentModel(customerId,reservationModel.getAmount());
+		restTemplate.postForObject("http://localhost/8084/payment/create", paymentModel, null)
+		return save;
+	}
+
+	public void cancelResevation(Long id) {
+		ReservationEntity entity = reservationRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Id not present in database"));
+		reservationRepository.delete(entity);
+	}
+
+}

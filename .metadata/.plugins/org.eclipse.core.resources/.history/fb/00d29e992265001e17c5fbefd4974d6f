@@ -1,0 +1,5 @@
+package com.training.customerservice.controller;
+
+public class CustomerController {
+
+}

@@ -1,0 +1,28 @@
+package com.training.notificationservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.training.notificationservice.service.NotificationService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@RequestMapping("/notification")
+@Slf4j
+public class NotificationController {
+	
+	@Autowired
+	NotificationService notificationService;
+
+	@GetMapping("/")
+	public String welcomeMessage()
+	{
+		String notificationMessage = notificationService.notificationMessage();
+		log.info(notificationMessage);
+		return notificationMessage;
+	}
+}

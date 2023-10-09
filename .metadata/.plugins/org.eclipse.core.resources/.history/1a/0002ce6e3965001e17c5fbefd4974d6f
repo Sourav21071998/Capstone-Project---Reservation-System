@@ -1,0 +1,5 @@
+package com.training.hotelmanagementservice.repository;
+
+public interface HotelRepository {
+
+}

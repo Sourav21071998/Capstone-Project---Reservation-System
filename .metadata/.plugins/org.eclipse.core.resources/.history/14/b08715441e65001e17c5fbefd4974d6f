@@ -1,0 +1,5 @@
+package com.training.customerservice.repository;
+
+public interface CustomerRepository {
+
+}

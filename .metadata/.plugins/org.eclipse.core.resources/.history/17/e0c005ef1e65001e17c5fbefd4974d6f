@@ -1,0 +1,10 @@
+package com.training.customerservice.entity.model;
+
+public class CustomerModel {
+
+	Long Id;
+	String name;
+	String email;
+	String password;
+
+}

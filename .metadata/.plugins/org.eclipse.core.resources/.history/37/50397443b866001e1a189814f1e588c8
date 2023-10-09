@@ -1,0 +1,38 @@
+package com.training.hotelmanagementservice.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.training.hotelmanagementservice.entity.HotelEntity;
+import com.training.hotelmanagementservice.repository.HotelRepository;
+
+@Service
+public class HotelService {
+	
+	@Autowired
+	HotelRepository hotelRepository;
+	
+	public boolean checkAvailability(Long Id)
+	{
+		Optional<HotelEntity> hotel = hotelRepository.findById(Id);
+		if (hotel == null && !hotel.get().isAvailable())
+			return false;
+		else
+		{
+			hotel.get().setCustomerId(Id);
+			hotel.get().setAvailable(false);
+			createHotel(hotel.get());
+			return true;
+		}
+	}
+	
+	
+	public HotelEntity createHotel(HotelEntity hotelEntity)
+	{
+		HotelEntity save = hotelRepository.save(hotelEntity);
+		return save;
+	}
+
+}

@@ -1,0 +1,25 @@
+package com.training.customerservice.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.training.customerservice.entity.CustomerEntity;
+import com.training.customerservice.entity.model.CustomerModel;
+import com.training.customerservice.repository.CustomerRepository;
+
+@Service
+public class CustomerService {
+	
+	@Autowired
+	CustomerRepository customerRepository;
+	
+	public CustomerModel registerCustomer(CustomerEntity customerEntity)
+	{
+		CustomerEntity save = customerRepository.save(customerEntity);
+		CustomerModel customerModel = new CustomerModel();
+		BeanUtils.copyProperties(save, customerModel);
+		return customerModel;
+	}
+
+}

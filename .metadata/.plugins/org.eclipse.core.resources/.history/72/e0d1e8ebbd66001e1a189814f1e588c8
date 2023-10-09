@@ -1,0 +1,14 @@
+package com.training.notificationservice.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationService {
+	
+	public String notificationMessage(String name)
+	{
+		String message = "Hi, Welcome, "+name;
+		return message;
+	}
+
+}

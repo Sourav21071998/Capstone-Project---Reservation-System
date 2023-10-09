@@ -1,0 +1,56 @@
+package com.training.reservationservice.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.training.reservationservice.entity.ReservationEntity;
+import com.training.reservationservice.model.PaymentModel;
+import com.training.reservationservice.model.ReservationModel;
+import com.training.reservationservice.reservationRepository.ReservationRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class ReservationService {
+
+	@Autowired
+	ReservationRepository reservationRepository;
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Transactional
+	public Object createReservation(ReservationModel reservationModel) {
+		log.info("Inside service of createReservation");
+		Long customerId = reservationModel.getCustomerId();
+		Boolean checkCustomer = restTemplate.getForObject("http://localhost:8081/customer/" + customerId,
+				Boolean.class);
+		if (checkCustomer == false)
+			throw new RuntimeException("CustomerId:" + customerId + " is not present in database.");
+		log.info("Customer validation done");
+		Long hotelId = reservationModel.getHotelId();
+		Boolean checkHotel = restTemplate.getForObject("http://localhost:8082/hotel/check/" + hotelId, Boolean.class);
+		if (checkHotel == false)
+			throw new RuntimeException("HotelId:"+hotelId+" is not present in database");
+		log.info("Hotel Room is available");
+		ReservationEntity reservationEntity = new ReservationEntity();
+		BeanUtils.copyProperties(reservationModel, reservationEntity);
+		ReservationEntity save = reservationRepository.save(reservationEntity);
+		PaymentModel paymentModel = new PaymentModel(customerId,reservationModel.getAmount());
+		String msg = restTemplate.postForObject("http://localhost:8084/payment/create", paymentModel, String.class);
+		log.info("Payment call successful");
+		return msg;
+	}
+
+	public void cancelResevation(Long id) {
+		ReservationEntity entity = reservationRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Id not present in database"));
+		reservationRepository.delete(entity);
+	}
+
+}

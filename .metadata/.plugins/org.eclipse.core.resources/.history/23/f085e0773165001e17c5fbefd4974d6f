@@ -1,0 +1,5 @@
+package com.training.reservationservice.service;
+
+public class ReservationService {
+
+}
