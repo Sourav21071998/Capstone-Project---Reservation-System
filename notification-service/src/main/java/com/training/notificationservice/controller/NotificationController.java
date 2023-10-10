@@ -32,4 +32,13 @@ public class NotificationController {
 				customerId);
 		return notificationBookingConfirmation;
 	}
+	
+	@GetMapping("/room/cancellation/{hotelId}/{customerId}")
+	public String roomCancellation(@PathVariable Long hotelId, @PathVariable Long customerId)
+	{
+		String message = notificationService.roomCancellation(hotelId, customerId);
+		return message;
+	}
+	
+	
 }

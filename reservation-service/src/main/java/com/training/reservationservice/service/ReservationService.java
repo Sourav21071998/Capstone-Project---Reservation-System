@@ -36,7 +36,7 @@ public class ReservationService {
 			throw new RuntimeException("CustomerId:" + customerId + " is not present in database.");
 		log.info("Customer validation done");
 		Long hotelId = reservationModel.getHotelId();
-		Boolean checkHotel = restTemplate.getForObject("http://localhost:8082/hotel/check/" + hotelId, Boolean.class);
+		Boolean checkHotel = restTemplate.getForObject("http://localhost:8082/hotel/check/" + hotelId+"/"+customerId, Boolean.class);
 		if (checkHotel == false)
 			throw new RuntimeException("HotelId:" + hotelId + " is not available for booking");
 		log.info("Hotel Room is available");
@@ -45,19 +45,30 @@ public class ReservationService {
 		reservationEntity.setEndDate(LocalDate.parse(reservationModel.getEndDate()));
 		BeanUtils.copyProperties(reservationModel, reservationEntity);
 		ReservationEntity save = reservationRepository.save(reservationEntity);
-		PaymentModel paymentModel = new PaymentModel(customerId, reservationModel.getAmount());
+		PaymentModel paymentModel = new PaymentModel(customerId, reservationModel.getAmount(),hotelId);
 		String msg = restTemplate.postForObject("http://localhost:8084/payment/create", paymentModel, String.class);
 		log.info(msg);
 		String notificationMessage = restTemplate.getForObject(
-				"http://localhost:8083/notification//booking/confirmation/" + hotelId + "/" + customerId, 
-				String.class);
-		return notificationMessage;
+				"http://localhost:8083/notification/booking/confirmation/" + hotelId + "/" + customerId, String.class);
+		return notificationMessage + " and bookingId is "+save.getId();
 	}
 
-	public void cancelResevation(Long id) {
+	public String cancelResevation(Long id) {
 		ReservationEntity entity = reservationRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Id not present in database"));
+		Long customerId = entity.getCustomerId();
+		Long hotelId = entity.getHotelId();
+		restTemplate.delete("http://localhost:8084/payment/delete/" + customerId+"/"+hotelId);
+		log.info("Payment has been refunded");
 		reservationRepository.delete(entity);
+		Boolean value = restTemplate.getForObject("http://localhost:8082/hotel/" + customerId+"/"+hotelId,
+				Boolean.class);
+		String message="";
+		if (value == true) {
+			message = restTemplate.getForObject(
+					"http://localhost:8083/notification/room/cancellation/" + hotelId + "/" + customerId, String.class);
+		}
+		return message;
 	}
 
 }

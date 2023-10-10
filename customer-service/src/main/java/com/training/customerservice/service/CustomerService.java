@@ -6,16 +6,24 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.training.customerservice.entity.CustomerEntity;
 import com.training.customerservice.entity.model.CustomerModel;
+import com.training.customerservice.entity.model.HotelModel;
 import com.training.customerservice.repository.CustomerRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CustomerService {
 
 	@Autowired
 	CustomerRepository customerRepository;
+	
+	@Autowired
+	RestTemplate restTemplate;
 
 	public CustomerModel registerCustomer(CustomerModel model) {
 		CustomerEntity customerEntity = new CustomerEntity();
@@ -54,6 +62,13 @@ public class CustomerService {
 		else
 			return true;
 
+	}
+	
+	public List<HotelModel> viewAllHotels(Long customerId)
+	{
+		log.info("Inside service of viewAllHotels");
+		List<HotelModel> models = restTemplate.getForObject("http://localhost:8082/hotel/getAllHotels/"+customerId, List.class);
+		return models;
 	}
 
 }

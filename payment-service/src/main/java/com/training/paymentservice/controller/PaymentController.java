@@ -28,10 +28,10 @@ public class PaymentController {
 		return msg;
 	}
 	
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> cancelPayment(@PathVariable Long id)
+	@DeleteMapping("/delete/{id}/{hotelId}")
+	public ResponseEntity<?> cancelPayment(@PathVariable Long id, @PathVariable Long hotelId)
 	{
-		paymentService.refund(id);
+		paymentService.refund(id,hotelId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

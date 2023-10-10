@@ -1,0 +1,66 @@
+package com.training.customerservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.training.customerservice.entity.model.CustomerModel;
+import com.training.customerservice.entity.model.HotelModel;
+import com.training.customerservice.service.CustomerService;
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+
+	@Autowired
+	CustomerService customerService;
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@PostMapping("/register")
+	public ResponseEntity<?> register(@RequestBody CustomerModel customerModel) {
+		CustomerModel registerCustomer = customerService.registerCustomer(customerModel);
+		String str="";
+		try {
+			str = (String) restTemplate
+					.getForObject("http://localhost:8083/notification/" + registerCustomer.getName(), String.class);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(str+" (Id:"+registerCustomer.getId()+")", HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/{Id}")
+	public boolean checkCuspomer(@PathVariable Long Id)
+	{
+		boolean check = customerService.checkCustomer(Id);
+		return check;
+	}
+
+	@PutMapping("/update/{Id}")
+	public ResponseEntity<Object> updateCustomer(@PathVariable Long Id, @RequestBody CustomerModel customerModel) {
+		try {
+			CustomerModel updateCustomer = customerService.updateCustomer(Id, customerModel);
+			return new ResponseEntity<>(updateCustomer, HttpStatus.OK);
+		} catch (Exception ex) {
+			return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/hotels/{customerId}")
+	public ResponseEntity<?> viewAllHotels(@PathVariable Long customerId) {
+		List<HotelModel> viewAllHotels = customerService.viewAllHotels(customerId);
+		return viewAllHotels;
+	}
+}

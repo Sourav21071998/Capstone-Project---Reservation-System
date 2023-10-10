@@ -1,0 +1,5 @@
+package com.training.customerservice.entity.model;
+
+public class HotelModel {
+
+}

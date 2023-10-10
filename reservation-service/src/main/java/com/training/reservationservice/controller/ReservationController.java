@@ -24,25 +24,27 @@ public class ReservationController {
 
 	@Autowired
 	ReservationService reservationService;
-	
+
 	@PostMapping("/create")
-	public ResponseEntity<?> createReservation(@RequestBody ReservationModel reservationModel)
-	{
+	public ResponseEntity<?> createReservation(@RequestBody ReservationModel reservationModel) {
 		try {
-		log.info("Inside controller of createReservation");
-		String createReservation = (String)reservationService.createReservation(reservationModel);
-		return new ResponseEntity<>(createReservation, HttpStatus.CREATED);
-		}
-		catch(Exception ex) {
+			log.info("Inside controller of createReservation");
+			String createReservation = (String) reservationService.createReservation(reservationModel);
+			return new ResponseEntity<>(createReservation, HttpStatus.CREATED);
+		} catch (Exception ex) {
 			String message = ex.getMessage();
 			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> cancelReservation(@PathVariable Long id)
-	{
-		reservationService.cancelResevation(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+
+	@DeleteMapping("/delete/{bookingId}")
+	public ResponseEntity<?> cancelReservation(@PathVariable Long bookingId) {
+		try {
+			String cancelResevation = reservationService.cancelResevation(bookingId);
+			return new ResponseEntity<>(cancelResevation, HttpStatus.OK);
+		} catch (Exception ex) {
+			String message = ex.getMessage();
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
 	}
 }

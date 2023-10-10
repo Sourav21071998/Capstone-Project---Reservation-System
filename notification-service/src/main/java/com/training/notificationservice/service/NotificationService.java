@@ -16,4 +16,9 @@ public class NotificationService {
 		return message;
 	}
 
+	public String roomCancellation(Long hotelId, Long customerId) {
+		String message = "Booking has been cancelled for hotelId: " + hotelId + " and customerId: " + customerId
+				+ ". Payment has been refunded";
+		return message;
+	}
 }

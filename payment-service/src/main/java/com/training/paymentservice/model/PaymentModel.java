@@ -2,8 +2,6 @@ package com.training.paymentservice.model;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +19,6 @@ public class PaymentModel {
     
     private BigDecimal amount;
 
+    private Long hotelId;
+    
 }

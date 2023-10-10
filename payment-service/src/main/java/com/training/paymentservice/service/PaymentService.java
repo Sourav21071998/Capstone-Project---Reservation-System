@@ -8,7 +8,10 @@ import com.training.paymentservice.entity.Payment;
 import com.training.paymentservice.model.PaymentModel;
 import com.training.paymentservice.repository.PaymentRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class PaymentService {
 
 	@Autowired
@@ -23,10 +26,11 @@ public class PaymentService {
 		return payModel;
 	}
 
-	public void refund(Long Id) {
-		Payment payment = paymentRepository.findById(Id)
-				.orElseThrow(() -> new RuntimeException("Id not present in database"));
-		paymentRepository.delete(payment);
+	public void refund(Long Id, Long hotelId) {
+		Payment entity = paymentRepository.findByCustomerIdAndHotelId(Id,hotelId);
+		Long id2 = entity.getId();
+		log.info("Payment has been deleted for customerId: "+Id+" and paymentId: "+id2);
+		paymentRepository.delete(entity);
 	}
 
 }

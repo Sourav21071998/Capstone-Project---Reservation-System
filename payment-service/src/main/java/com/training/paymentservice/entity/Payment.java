@@ -30,5 +30,8 @@ public class Payment {
     
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
+    
+    @Column(name = "hotelId")
+    private Long hotelId;
 
 }

@@ -1,0 +1,5 @@
+package com.training.hotelmanagementservice.model;
+
+public class HotelModel {
+
+}

@@ -16,5 +16,7 @@ public class PaymentModel {
 	private Long customerId;
 	
 	private BigDecimal amount;
+	
+	private Long hotelId;
 
 }
